@@ -12,7 +12,7 @@ class Interface
 
   # show user balance and points
   def show_balance(user, croupier)
-    puts "Name: #{user.name}, balance: #{user.balance}, points: #{user.card_points} : #{croupier.card_points}"
+    puts "Name: #{user.name}, balance: #{user.balance}, points: #{user.card_points}"
   end
 
   # show cards
