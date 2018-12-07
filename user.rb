@@ -1,19 +1,16 @@
-require './card_generator'
-require './card_checker'
+require '../BlackJack/hand'
 
 # user class
 class User
-  include CardGenerator
-  include CardChecker
-
   attr_reader :name
-  attr_accessor :balance, :cards, :card_points
+  attr_accessor :balance, :cards, :hand, :card_points
 
-  def initialize(name)
+  def initialize(name, balance=100)
     @name = name if name_valid?(name)
-    @balance = 100
-    @cards = []
-    @card_points = 0
+    @hand = Hand.new(@name)
+    @balance = balance
+    @cards = @hand.user_cards
+    @card_points = @hand.user_card_points
   end
 
   # check for 3 cards

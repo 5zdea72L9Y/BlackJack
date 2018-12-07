@@ -1,5 +1,6 @@
-require './user'
-require './croupier'
+require '../BlackJack/user'
+require '../BlackJack/croupier'
+require '../BlackJack/interface'
 
 # main class
 class Main
@@ -10,15 +11,15 @@ class Main
     @open = false
     @winner = nil
     @loser = nil
+    @i = Interface.new
   end
 
   # start
   def start
     # create user and croupier
-    puts 'Enter name please: '
-    name = gets.chomp.to_s
-    @user = User.new(name)
-    cls
+
+    @user = User.new(@i.start_msg)
+    @i.cls
     @croupier = Croupier.new
     start_game
   end
@@ -28,12 +29,12 @@ class Main
   # start game
   def start_game
     # generate cards
-    @user.cards.clear
-    @croupier.cards.clear
-    @user.card_points = 0
-    @croupier.card_points = 0
-    @user.generate_cards
-    @croupier.generate_cards
+
+    new_user = User.new(@user.name, @user.balance)
+    @user = new_user
+
+    new_croupier = Croupier.new(@croupier.balance)
+    @croupier = new_croupier
     add_to_bank
     # check user actions
     main_method
@@ -42,11 +43,11 @@ class Main
   # main actions
   def main_method
     loop do
-      cls
+      @i.cls
       raise 'zero balance' if @user.balance.zero? || @croupier.balance.zero?
 
-      show_balance
-      show_cards(@open)
+      @i.show_balance(@user, @croupier)
+      @i.show_cards(@open, @user, @croupier)
       # user action
       action
 
@@ -60,7 +61,7 @@ class Main
       @loser = nil
       # play again
       if check_end
-        cls
+        @i.cls
         start_game
       else
         raise 'bye'
@@ -68,46 +69,36 @@ class Main
     end
   end
 
+  def skip_croupier
+    @i.cls
+    @i.show_balance(@user, @croupier)
+    @i.show_cards(@open, @user, @croupier)
+    action
+  end
+
   # user actions
   def action
     answers
-    cls
-    show_balance
-    show_cards(@open)
-  end
-
-  # show user balance and points
-  def show_balance
-    puts "Name: #{@user.name}, balance: #{@user.balance}, points: #{@user.card_points}"
+    @i.cls
+    @i.show_balance(@user, @croupier)
+    @i.show_cards(@open, @user, @croupier)
   end
 
   # user answer
   def answers
-    puts "Enter action:
-    1 - skip a turn
-    2 - add card
-    3 - open cards
-    "
-    action = gets.chomp.to_i
-    check_action(action)
-  end
-
-  # clear console
-  def cls
-    system('clear')
+    check_action(@i.action_msg)
   end
 
   # check end of the game
   def check_end
-    puts 'Play again?(1/0)'
-    action = gets.chomp.to_i
+    action = @i.again_msg
 
     case action
     when 1
-      cls
+      @i.cls
       return true
     when 0
-      cls
+      @i.cls
       return false
     else
       return false
@@ -121,58 +112,15 @@ class Main
     @bank = 20
   end
 
-  # show croupier and user cards
-  def show_cards(open)
-    show_user_cards
-
-    show_croupier_cards(open)
-  end
-
-  # user cards
-  def show_user_cards
-    puts 'Your cards: '
-    @user.cards.each do |card|
-      puts card
-    end
-  end
-
-  # open or close cards
-  def show_croupier_cards(open)
-    open ? open_cards : close_cards
-  end
-
-  # show croupier cards
-  def open_cards
-    puts 'Croupier cards: '
-    @croupier.cards.each do |card|
-      puts card
-    end
-  end
-
-  # close croupier cards
-  def close_cards
-    puts 'Croupier cards: '
-    @croupier.cards.count.times do
-      card = '*'
-      puts card
-    end
-  end
-
   # check user input
   def check_action(action)
     case action
     when 1
-      puts 'skip..'
+      @i.skip
       sleep(2)
       skip_a_turn
     when 2
       add_card
-      # open cards auto
-      if @user.check_cards
-        @open = true
-        check_winner
-        win_actions
-      end
     when 3
       @open = true
       check_winner
@@ -182,8 +130,11 @@ class Main
 
   # add card
   def add_card
-    @user.add_card
-    @croupier.move
+    @user.hand.add_card(@user.name)
+    @user.card_points = @user.hand.card_user.card_points
+    @open = true
+    check_winner
+    win_actions
   end
 
   # check who win
@@ -202,9 +153,7 @@ class Main
 
   # show user who win
   def win_actions
-    puts "User points: #{@user.card_points}, croupier points: #{@croupier.card_points}"
-    puts "Winner: #{@winner.name} \n" if @winner
-    puts "Draw \n" unless @winner
+    @i.winner_msg(@user, @croupier, @winner)
 
     # balance
     @winner.balance += @bank if @winner
@@ -212,7 +161,7 @@ class Main
 
   # skip a turn
   def skip_a_turn
-    main_method unless @croupier.move
+    skip_croupier unless @croupier.move
   end
 end
 

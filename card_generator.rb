@@ -1,4 +1,5 @@
-require './card_checker'
+require '../BlackJack/card_checker'
+require '../BlackJack/deck'
 
 # generate cards
 module CardGenerator
@@ -10,46 +11,47 @@ module CardGenerator
   module InstanceMethods
     include CardChecker
 
-    @@cards_g = %w[1 2 3 4 5 6 7 8 9 10 J Q K A]
-    @@card_suit_g = %w[diamond spade club heart]
+    @@cards_g = Deck.cards
+    @@card_suit_g = Deck.suit
 
     # generate cards
-    def generate_cards
+    def generate_cards(cards)
       loop do
-        break if @cards.count == 2
+        break if cards.count == 2
 
         # take random cards
         card = @@cards_g.sample
         suit = @@card_suit_g.sample
         card_toggle = "#{card} - #{suit}"
-        next unless valid?(card_toggle)
+        next unless valid?(card_toggle, cards)
 
-        @cards << card_toggle
-        # count points
-        check_card_point(card)
+        # count points and write card
+        write_card(card_toggle, check_card_point(card))
       end
     end
 
     # add card
-    def add_card
+    def add_card_to_hand(cards)
+      @@g_cards = []
       loop do
-        break if @cards.count == 3
+        break if @@g_cards.count == 1
 
         # take random cards
         card = @@cards_g.sample
         suit = @@card_suit_g.sample
         card_toggle = "#{card} - #{suit}"
-        next unless valid?(card_toggle)
+        @@g_cards << card_toggle
+        next unless valid?(card_toggle, cards)
 
-        @cards << card_toggle
-        # count points
-        check_card_point(card)
+        # count points and write card
+        write_card(card_toggle, check_card_point(card))
       end
+      @@g_cards = []
     end
 
     # check valid
-    def valid?(card_toggle)
-      validate_cards!(card_toggle)
+    def valid?(card_toggle, cards)
+      validate_cards!(card_toggle, cards)
       true
     rescue StandardError
       false
@@ -57,8 +59,8 @@ module CardGenerator
 
     private
 
-    def validate_cards!(card_toggle)
-      raise if @cards.include?(card_toggle)
+    def validate_cards!(card_toggle, cards)
+      raise if cards.include?(card_toggle)
     end
   end
 end
