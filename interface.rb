@@ -11,7 +11,7 @@ class Interface
   end
 
   # show user balance and points
-  def show_balance(user, croupier)
+  def show_balance(user)
     puts "Name: #{user.name}, balance: #{user.balance}, points: #{user.card_points}"
   end
 
@@ -61,13 +61,9 @@ class Interface
     action = gets.chomp.to_i
   end
 
-  def skip
-    puts 'skip..'
-  end
-
   def winner_msg(user, croupier, winner)
     puts "User points: #{user.card_points}, croupier points: #{croupier.card_points}"
-    puts "Winner: #{winner.name} \n" if winner
-    puts "Draw \n" unless winner
+    puts "Winner: #{winner.name} \n" if winner == user || winner == croupier
+    puts "Draw \n" if winner == 'draw'
   end
 end

@@ -9,8 +9,8 @@ class User
     @name = name if name_valid?(name)
     @hand = Hand.new(@name)
     @balance = balance
-    @cards = @hand.user_cards
-    @card_points = @hand.user_card_points
+    @cards = @hand.cards
+    @card_points = @hand.card_points
   end
 
   # check for 3 cards

@@ -9,8 +9,8 @@ class Croupier
     @name = 'croupier'
     @hand = Hand.new(@name)
     @balance = balance
-    @cards = @hand.croupier_cards
-    @card_points = @hand.croupier_card_points
+    @cards = @hand.cards
+    @card_points = @hand.card_points
   end
 
   def move
@@ -22,8 +22,8 @@ class Croupier
   end
 
   def add_card_croupier
-    @hand.add_card(@name)
-    @card_points = @hand.card_croupier.card_points
+    @hand.add_card
+    @card_points = @hand.card.card_points
     @cards.pop if @cards.count > 3
   end
 end

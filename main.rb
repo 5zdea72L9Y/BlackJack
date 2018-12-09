@@ -11,13 +11,13 @@ class Main
     @open = false
     @winner = nil
     @loser = nil
+    @draw = 'draw'
     @i = Interface.new
   end
 
   # start
   def start
     # create user and croupier
-
     @user = User.new(@i.start_msg)
     @i.cls
     @croupier = Croupier.new
@@ -29,12 +29,8 @@ class Main
   # start game
   def start_game
     # generate cards
-
-    new_user = User.new(@user.name, @user.balance)
-    @user = new_user
-
-    new_croupier = Croupier.new(@croupier.balance)
-    @croupier = new_croupier
+    @user = User.new(@user.name, @user.balance)
+    @croupier = Croupier.new(@croupier.balance)
     add_to_bank
     # check user actions
     main_method
@@ -44,9 +40,9 @@ class Main
   def main_method
     loop do
       @i.cls
-      raise 'zero balance' if @user.balance.zero? || @croupier.balance.zero?
+      abort 'your or croupier balance is 0' if @user.balance.zero? || @croupier.balance.zero?
 
-      @i.show_balance(@user, @croupier)
+      @i.show_balance(@user)
       @i.show_cards(@open, @user, @croupier)
       # user action
       action
@@ -64,14 +60,15 @@ class Main
         @i.cls
         start_game
       else
-        raise 'bye'
+        # exit from the program
+        abort 'bye'
       end
     end
   end
 
   def skip_croupier
     @i.cls
-    @i.show_balance(@user, @croupier)
+    @i.show_balance(@user)
     @i.show_cards(@open, @user, @croupier)
     action
   end
@@ -80,7 +77,7 @@ class Main
   def action
     answers
     @i.cls
-    @i.show_balance(@user, @croupier)
+    @i.show_balance(@user)
     @i.show_cards(@open, @user, @croupier)
   end
 
@@ -101,6 +98,7 @@ class Main
       @i.cls
       return false
     else
+      @i.cls
       return false
     end
   end
@@ -116,8 +114,6 @@ class Main
   def check_action(action)
     case action
     when 1
-      @i.skip
-      sleep(2)
       skip_a_turn
     when 2
       add_card
@@ -130,8 +126,8 @@ class Main
 
   # add card
   def add_card
-    @user.hand.add_card(@user.name)
-    @user.card_points = @user.hand.card_user.card_points
+    @user.hand.add_card
+    @user.card_points = @user.hand.card.card_points
     @open = true
     check_winner
     win_actions
@@ -142,21 +138,26 @@ class Main
     # winner logic
     @winner = @user if @croupier.card_points < @user.card_points || @croupier.card_points > 21
     @winner = @croupier if @croupier.card_points > @user.card_points || @user.card_points > 21
-    @winner = nil if @croupier.card_points == @user.card_points
-    @winner = nil if @croupier.card_points > 21 && @user.card_points > 21
+    @winner = @draw if @croupier.card_points == @user.card_points
+    @winner = @draw if @croupier.card_points > 21 && @user.card_points > 21
     # loser logic
     @loser = @user if @winner == @croupier
     @loser = @croupier if @winner == @user
-    @loser = nil if @croupier.card_points == @user.card_points
-    @loser = nil if @croupier.card_points > 21 && @user.card_points > 21
+    @loser = @draw if @croupier.card_points == @user.card_points
+    @loser = @draw if @croupier.card_points > 21 && @user.card_points > 21
   end
 
   # show user who win
   def win_actions
-    @i.winner_msg(@user, @croupier, @winner)
+    @i.winner_msg(@user, @croupier, @winner) if @winner == @user || @winner == @croupier
+    @i.winner_msg(@user, @croupier, @draw) if @winner == @draw
 
     # balance
-    @winner.balance += @bank if @winner
+    @winner.balance += @bank if @winner == @user || @winner == @croupier
+    if @winner == @draw
+      @user.balance += 10
+      @croupier.balance += 10
+    end
   end
 
   # skip a turn
