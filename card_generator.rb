@@ -11,8 +11,9 @@ module CardGenerator
   module InstanceMethods
     include CardChecker
 
-    @@cards_g = Deck.cards
-    @@card_suit_g = Deck.suit
+    @deck = Deck.new
+    @@cards_g = @deck.cards
+    @@card_suit_g = @deck.suit
 
     # generate cards
     def generate_cards(cards)
