@@ -1,27 +1,36 @@
-require '../BlackJack/card'
-# card in hand
+require '../BlackJack/deck'
+# cards in hand
 class Hand
   attr_accessor :name, :card, :cards, :card_points
 
   def initialize(name)
     @name = name
-    @card = Card.new
-    @cards = @card.cards
-    @card_points = @card.card_points
+    @deck = Deck.new
+    @cards = @deck.cards
+    @card_points = count_points
+  end
+
+  # sum points
+  def count_points
+    points = 0
+    @cards.each do |i|
+      points += i.points
+    end
+    points
   end
 
   # add card to hand
   def add_card
-    add_card_to_cards(@card.generate_card(@cards))
-  end
-
-  # add cards
-  def add_card_to_cards(card)
-    @cards << card
+    @deck.add_card_to_hand(@cards)
+    @cards = @deck.cards
+    @card_points = count_points
   end
 
   # clear hand
   def clear_cards
-    @cards = Card.new.cards
+    @cards = Deck.new.cards
+    @card_points = count_points
   end
+
+
 end

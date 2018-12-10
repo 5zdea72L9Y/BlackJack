@@ -26,7 +26,7 @@ class Interface
   def show_user_cards(user)
     puts 'Your cards: '
     user.cards.each do |card|
-      puts card
+      puts card.name
     end
   end
 
@@ -34,7 +34,7 @@ class Interface
   def open_cards(croupier)
     puts 'Croupier cards: '
     croupier.cards.each do |card|
-      puts card
+      puts card.name
     end
   end
 

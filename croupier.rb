@@ -23,7 +23,7 @@ class Croupier
 
   def add_card_croupier
     @hand.add_card
-    @card_points = @hand.card.card_points
+    @card_points = @hand.card_points
     @cards.pop if @cards.count > 3
   end
 end

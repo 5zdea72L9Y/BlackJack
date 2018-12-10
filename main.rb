@@ -127,7 +127,7 @@ class Main
   # add card
   def add_card
     @user.hand.add_card
-    @user.card_points = @user.hand.card.card_points
+    @user.card_points = @user.hand.card_points
     @open = true
     check_winner
     win_actions
