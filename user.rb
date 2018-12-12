@@ -1,24 +1,18 @@
-require '../BlackJack/hand'
+require_relative './hand'
 
 # user class
 class User
   attr_reader :name
   attr_accessor :balance, :cards, :hand, :card_points
 
-  def initialize(name, balance=100)
+  def initialize(name, balance = 100)
     @name = name if name_valid?(name)
+    @name = 'looser' unless name_valid?(name)
     @hand = Hand.new(@name)
     @balance = balance
     @cards = @hand.cards
     @card_points = @hand.card_points
   end
-
-  # check for 3 cards
-  def check_cards
-    return true if @cards.count == 3
-  end
-
-  private
 
   def name_valid?(name)
     validate_name!(name)
@@ -26,6 +20,8 @@ class User
   rescue StandardError
     false
   end
+
+  private
 
   def validate_name!(name)
     raise 'blank или nil' if name.to_s.empty?

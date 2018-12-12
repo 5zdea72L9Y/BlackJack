@@ -1,9 +1,7 @@
-require '../BlackJack/card'
-require '../BlackJack/card_checker'
+require_relative './card'
+
 # all cards
 class Deck
-  include CardChecker
-
   attr_accessor :cards
 
   def initialize
@@ -23,10 +21,10 @@ class Deck
       card = @card_values.sample
       suit = @card_suit.sample
       card_toggle = "#{card} - #{suit}"
-      next unless valid?
+      next unless valid?(card)
 
       # count points and write card
-      new_card = Card.new(card_toggle, check_card_point(card))
+      new_card = Card.new(card_toggle)
       @cards << new_card
     end
   end
@@ -40,17 +38,17 @@ class Deck
       card = @card_values.sample
       suit = @card_suit.sample
       card_toggle = "#{card} - #{suit}"
-      next unless valid?
+      next unless valid?(card)
 
       # count points and write card
-      new_card = Card.new(card_toggle, check_card_point(card))
+      new_card = Card.new(card_toggle)
       @cards << new_card
     end
   end
 
   # check valid
-  def valid?
-    validate_cards!
+  def valid?(card)
+    validate_cards!(card)
     true
   rescue StandardError
     false
@@ -58,7 +56,7 @@ class Deck
 
   private
 
-  def validate_cards!
-
+  def validate_cards!(card)
+    raise if @cards.include?(card)
   end
 end

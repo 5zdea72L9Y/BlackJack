@@ -1,4 +1,5 @@
-require '../BlackJack/deck'
+require_relative './deck'
+
 # cards in hand
 class Hand
   attr_accessor :name, :card, :cards, :card_points
@@ -13,8 +14,10 @@ class Hand
   # sum points
   def count_points
     points = 0
-    @cards.each do |i|
-      points += i.points
+    @cards.each do |card|
+      points += 1 if card.ace? && points + 11 >= 21
+      points += card.points if card.ace? && points + 11 < 21
+      points += card.points unless card.ace?
     end
     points
   end
@@ -31,6 +34,4 @@ class Hand
     @cards = Deck.new.cards
     @card_points = count_points
   end
-
-
 end
