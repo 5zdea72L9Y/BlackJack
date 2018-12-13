@@ -15,7 +15,7 @@ class Hand
   def count_points
     points = 0
     @cards.each do |card|
-      points += 1 if card.ace? && points + 11 >= 21
+      points += 1 if card.ace? && points + 11 > 21
       points += card.points if card.ace? && points + 11 < 21
       points += card.points unless card.ace?
     end
@@ -24,7 +24,7 @@ class Hand
 
   # add card to hand
   def add_card
-    @deck.add_card_to_hand(@cards)
+    @deck.add_card_to_hand
     @cards = @deck.cards
     @card_points = count_points
   end

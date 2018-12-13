@@ -21,12 +21,12 @@ class Card
 
   # check number
   def number?
-    @name.to_i.zero? ? false : true
+    !@name.to_i.zero?
   end
 
   # check picture
   def picture?
-    %w[J Q K].include?(@name.chars.first) ? true : false
+    %w[J Q K].include?(@name.chars.first)
   end
 
   # card name

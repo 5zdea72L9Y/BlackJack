@@ -4,29 +4,31 @@ require_relative './croupier'
 
 # main class
 class Main
-  def initialize
+  def initialize(user=nil, croupier=nil, again)
     @bank = 0
     @open = false
     @draw = 'draw'
     @i = Interface.new
-  end
-
-  # start
-  def start
-    # create user and croupier
-    @user = User.new(@i.start_msg)
-    @i.cls
-    @croupier = Croupier.new
-    start_game
+    start unless again
+    start_again(user, croupier) if again
   end
 
   private
 
   # start game
-  def start_game
+  def start
+    @user = User.new(@i.start_msg, 100)
+    @i.cls
+    @croupier = Croupier.new(100)
+    add_to_bank
+    main_method
+  end
+
+  # start again
+  def start_again(user, croupier)
     # generate cards
-    @user = User.new(@user.name, @user.balance)
-    @croupier = Croupier.new(@croupier.balance)
+    @user = User.new(user.name, user.balance)
+    @croupier = Croupier.new(croupier.balance)
     add_to_bank
     # check user actions
     main_method
@@ -101,15 +103,15 @@ class Main
   # check who win
   def check_winner
     # winner logic
-    @winner = @user if (@croupier.card_points < @user.card_points && @user.card_points < 21) || @croupier.card_points >= 21
-    @winner = @croupier if (@croupier.card_points > @user.card_points && @croupier.card_points < 21) || @user.card_points >= 21
+    @winner = @user if (@croupier.card_points < @user.card_points && @user.card_points < 21) || @croupier.card_points >= 21 || @user.card_points == 21
+    @winner = @croupier if (@croupier.card_points > @user.card_points && @croupier.card_points < 21) || @user.card_points >= 21 || @croupier.card_points == 21
     @winner = @draw if @croupier.card_points == @user.card_points
-    @winner = @draw if @croupier.card_points >= 21 && @user.card_points >= 21
+    @winner = @draw if @croupier.card_points > 21 && @user.card_points > 21
     # loser logic
     @loser = @user if @winner == @croupier
     @loser = @croupier if @winner == @user
     @loser = @draw if @croupier.card_points == @user.card_points
-    @loser = @draw if @croupier.card_points >= 21 && @user.card_points >= 21
+    @loser = @draw if @croupier.card_points > 21 && @user.card_points > 21
   end
 
   # show user who win
@@ -134,7 +136,8 @@ class Main
       @bank = 0
       @open = false
       @loser = nil
-      start_game
+      # start new game
+      Main.new(@user, @croupier, true)
     else
       # exit from the program
       abort 'bye'
@@ -147,6 +150,5 @@ class Main
   end
 end
 
-main = Main.new
+main = Main.new(false)
 
-main.start

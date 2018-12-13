@@ -8,55 +8,44 @@ class Deck
     @card_values = %w[1 2 3 4 5 6 7 8 9 10 J Q K A]
     @card_suit = %w[diamond spade club heart]
     @cards = []
-
+    @generated_cards = []
     generate_cards
   end
 
   # generate cards
   def generate_cards
+    @card_values.each do |value|
+      @card_suit.each do |suit|
+        card = "#{value} - #{suit}"
+        @generated_cards << card
+      end
+    end
+    give_cards
+  end
+
+  # give cards
+  def give_cards
     loop do
       break if @cards.count == 2
 
-      # take random cards
-      card = @card_values.sample
-      suit = @card_suit.sample
-      card_toggle = "#{card} - #{suit}"
-      next unless valid?(card)
-
-      # count points and write card
-      new_card = Card.new(card_toggle)
-      @cards << new_card
+      card = @generated_cards.sample
+      unless @cards.include?(card)
+        toggle_card = Card.new(card)
+        @cards << toggle_card
+      end
     end
   end
 
   # add card
-  def add_card_to_hand(cards)
+  def add_card_to_hand
     loop do
-      break if cards.count == 3
+      break if @cards.count == 3
 
-      # take random cards
-      card = @card_values.sample
-      suit = @card_suit.sample
-      card_toggle = "#{card} - #{suit}"
-      next unless valid?(card)
-
-      # count points and write card
-      new_card = Card.new(card_toggle)
-      @cards << new_card
+      card = @generated_cards.sample
+      unless @cards.include?(card)
+        toggle_card = Card.new(card)
+        @cards << toggle_card
+      end
     end
-  end
-
-  # check valid
-  def valid?(card)
-    validate_cards!(card)
-    true
-  rescue StandardError
-    false
-  end
-
-  private
-
-  def validate_cards!(card)
-    raise if @cards.include?(card)
   end
 end
