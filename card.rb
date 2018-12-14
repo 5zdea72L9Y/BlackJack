@@ -28,9 +28,4 @@ class Card
   def picture?
     %w[J Q K].include?(@name.chars.first)
   end
-
-  # card name
-  def to_s
-    @name
-  end
 end

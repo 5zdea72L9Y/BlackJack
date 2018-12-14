@@ -5,7 +5,7 @@ class Deck
   attr_accessor :cards
 
   def initialize
-    @card_values = %w[1 2 3 4 5 6 7 8 9 10 J Q K A]
+    @card_values = %w[2 3 4 5 6 7 8 9 10 J Q K A]
     @card_suit = %w[diamond spade club heart]
     @cards = []
     @generated_cards = []
@@ -28,11 +28,11 @@ class Deck
     loop do
       break if @cards.count == 2
 
-      card = @generated_cards.sample
-      unless @cards.include?(card)
-        toggle_card = Card.new(card)
-        @cards << toggle_card
-      end
+      card_sample = @generated_cards.sample
+
+      toggle_card = Card.new(card_sample)
+      @cards << toggle_card unless @cards.include?(toggle_card.name)
+
     end
   end
 
@@ -41,11 +41,16 @@ class Deck
     loop do
       break if @cards.count == 3
 
-      card = @generated_cards.sample
-      unless @cards.include?(card)
-        toggle_card = Card.new(card)
-        @cards << toggle_card
-      end
+      card_sample = @generated_cards.sample
+
+      toggle_card = Card.new(card_sample)
+      @cards << toggle_card unless @cards.include?(toggle_card.name)
     end
+  end
+
+  # clear cards
+  def clear
+    @cards.clear
+    give_cards
   end
 end
