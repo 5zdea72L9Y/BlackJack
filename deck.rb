@@ -5,8 +5,6 @@ class Deck
   attr_accessor :cards
 
   def initialize
-    @card_values = %w[2 3 4 5 6 7 8 9 10 J Q K A]
-    @card_suit = %w[diamond spade club heart]
     @cards = []
     @generated_cards = []
     generate_cards
@@ -14,8 +12,8 @@ class Deck
 
   # generate cards
   def generate_cards
-    @card_values.each do |value|
-      @card_suit.each do |suit|
+    Card.card_values.each do |value|
+      Card.card_suit.each do |suit|
         card = "#{value} - #{suit}"
         @generated_cards << card
       end

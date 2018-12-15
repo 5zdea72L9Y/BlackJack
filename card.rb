@@ -2,9 +2,22 @@
 class Card
   attr_reader :name, :points
 
+  CARD_VALUES = %w[2 3 4 5 6 7 8 9 10 J Q K A]
+  CARD_SUIT = %w[♠ ♣ ♥ ♦]
+
   def initialize(card)
     @name = card
     count_points
+  end
+
+  class << self
+    def card_values
+      CARD_VALUES
+    end
+
+    def card_suit
+      CARD_SUIT
+    end
   end
 
   # count points
