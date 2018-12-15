@@ -4,14 +4,12 @@ require_relative './croupier'
 
 # main class
 class Main
-  def initialize # (user=nil, croupier=nil, again)
+  def initialize
     @bank = 0
     @open = false
     @draw = 'draw'
     @again = false
     @i = Interface.new
-    #start unless again
-    #start_again(user, croupier) if again
     start
   end
 
@@ -150,7 +148,7 @@ class Main
       @loser = nil
       @again = true
       # start new game
-      check # Main.new(@user, @croupier, true)
+      check
     else
       # exit from the program
       abort 'bye'
@@ -163,5 +161,5 @@ class Main
   end
 end
 
-main = Main.new # false
+main = Main.new 
 
