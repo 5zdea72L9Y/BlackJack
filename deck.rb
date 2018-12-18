@@ -2,10 +2,9 @@ require_relative './card'
 
 # all cards
 class Deck
-  attr_accessor :cards
+  attr_reader :generated_cards
 
   def initialize
-    @cards = []
     @generated_cards = []
     generate_cards
   end
@@ -18,37 +17,5 @@ class Deck
         @generated_cards << card
       end
     end
-    give_cards
-  end
-
-  # give cards
-  def give_cards
-    loop do
-      break if @cards.count == 2
-
-      card_sample = @generated_cards.sample
-
-      toggle_card = Card.new(card_sample)
-      @cards << toggle_card unless @cards.include?(toggle_card.name)
-
-    end
-  end
-
-  # add card
-  def add_card_to_hand
-    loop do
-      break if @cards.count == 3
-
-      card_sample = @generated_cards.sample
-
-      toggle_card = Card.new(card_sample)
-      @cards << toggle_card unless @cards.include?(toggle_card.name)
-    end
-  end
-
-  # clear cards
-  def clear
-    @cards.clear
-    give_cards
   end
 end

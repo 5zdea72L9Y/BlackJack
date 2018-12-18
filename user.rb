@@ -5,10 +5,10 @@ class User
   attr_reader :name
   attr_accessor :balance, :cards, :hand, :card_points
 
-  def initialize(name, balance)
+  def initialize(name, balance, deck)
     @name = name if name_valid?(name)
     @name = 'looser' unless name_valid?(name)
-    @hand = Hand.new(@name)
+    @hand = Hand.new(@name, deck)
     @balance = balance
     @cards = @hand.cards
     @card_points = @hand.card_points

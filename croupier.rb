@@ -5,9 +5,9 @@ class Croupier
   attr_reader :name
   attr_accessor :balance, :cards, :hand, :card_points
 
-  def initialize(balance)
+  def initialize(balance, deck)
     @name = 'croupier'
-    @hand = Hand.new(@name)
+    @hand = Hand.new(@name, deck)
     @balance = balance
     @cards = @hand.cards
     @card_points = @hand.card_points

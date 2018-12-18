@@ -9,6 +9,7 @@ class Main
     @open = false
     @draw = 'draw'
     @again = false
+    @deck = Deck.new
     @i = Interface.new
     start
   end
@@ -24,9 +25,9 @@ class Main
   end
   # start game
   def start
-    @user = User.new(@i.start_msg, 100)
+    @user = User.new(@i.start_msg, 100, @deck)
     @i.cls
-    @croupier = Croupier.new(100)
+    @croupier = Croupier.new(100, @deck)
     add_to_bank
     main_method
   end
@@ -71,9 +72,6 @@ class Main
     when 1
       @i.cls
       return true
-    when 0
-      @i.cls
-      return false
     else
       @i.cls
       return false
