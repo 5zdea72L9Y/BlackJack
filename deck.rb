@@ -2,7 +2,7 @@ require_relative './card'
 
 # all cards
 class Deck
-  attr_reader :generated_cards
+  attr_accessor :generated_cards
 
   def initialize
     @generated_cards = []
@@ -17,5 +17,6 @@ class Deck
         @generated_cards << card
       end
     end
+    @generated_cards.shuffle!
   end
 end

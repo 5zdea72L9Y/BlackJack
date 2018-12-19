@@ -2,7 +2,7 @@ require_relative './deck'
 
 # cards in hand
 class Hand
-  attr_accessor :name, :card, :cards, :card_points
+  attr_accessor :name, :card, :cards, :card_points, :deck
 
   def initialize(name, deck)
     @name = name
@@ -32,6 +32,7 @@ class Hand
   # clear hand
   def clear_cards
     @cards.clear
+    @deck.generated_cards.shuffle!
     give_cards
     @card_points = count_points
   end
@@ -41,7 +42,7 @@ class Hand
     loop do
       break if @cards.count == 2
 
-      card_sample = @deck.generated_cards.sample
+      card_sample = @deck.generated_cards.pop
 
       toggle_card = Card.new(card_sample)
       @cards << toggle_card unless @cards.include?(toggle_card.name)
@@ -54,7 +55,7 @@ class Hand
     loop do
       break if @cards.count == 3
 
-      card_sample = @deck.generated_cards.sample
+      card_sample = @deck.generated_cards.pop
 
       toggle_card = Card.new(card_sample)
       @cards << toggle_card unless @cards.include?(toggle_card.name)

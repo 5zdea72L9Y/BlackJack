@@ -8,46 +8,36 @@ class Main
     @bank = 0
     @open = false
     @draw = 'draw'
-    @again = false
+    @again = true
     @deck = Deck.new
     @i = Interface.new
+    @user = User.new(@i.start_msg, 100, @deck)
+    @croupier = Croupier.new(100, @deck)
     start
   end
 
   private
 
-  def check
-    if @again
-      start_again
-    else
-      abort 'bye'
-    end
-  end
   # start game
   def start
-    @user = User.new(@i.start_msg, 100, @deck)
-    @i.cls
-    @croupier = Croupier.new(100, @deck)
-    add_to_bank
-    main_method
-  end
+    loop do
+      @deck = Deck.new
+      @user.hand.deck = @deck
+      @croupier.hand.deck = @deck
+      @i.cls
+      abort 'bye' unless @again
+      abort 'your or croupier balance is 0' if @user.balance.zero? || @croupier.balance.zero?
 
-  # start again
-  def start_again
-    @user.hand.clear_cards
-    @croupier.hand.clear_cards
-    @user.cards = @user.hand.cards
-    @croupier.cards = @croupier.hand.cards
-    @user.card_points = @user.hand.card_points
-    @croupier.card_points = @croupier.hand.card_points
-    # generate cards
-    add_to_bank
-    # check user actions
-    main_method
+      @i.show_balance(@user)
+      @i.show_cards(@open, @user, @croupier)
+      check_action(@i.action_msg)
+
+      add_to_bank
+      main_method
+    end
   end
 
   # main actions
-
   def main_method
     @i.cls
     abort 'your or croupier balance is 0' if @user.balance.zero? || @croupier.balance.zero?
@@ -144,13 +134,17 @@ class Main
       @bank = 0
       @open = false
       @loser = nil
-      @again = true
       # start new game
-      check
     else
       # exit from the program
-      abort 'bye'
+      @again = false
     end
+    @user.hand.clear_cards
+    @croupier.hand.clear_cards
+    @user.cards = @user.hand.cards
+    @croupier.cards = @croupier.hand.cards
+    @user.card_points = @user.hand.card_points
+    @croupier.card_points = @croupier.hand.card_points
   end
 
   # skip a turn
