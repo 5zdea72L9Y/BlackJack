@@ -19,4 +19,9 @@ class Deck
     end
     @generated_cards.shuffle!
   end
+
+  def give_card
+    card = @generated_cards.pop
+    Card.new(card)
+  end
 end

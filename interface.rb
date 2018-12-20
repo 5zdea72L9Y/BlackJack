@@ -61,6 +61,11 @@ class Interface
     action = gets.chomp.to_i
   end
 
+  def add_card?
+    puts 'Add card?(1/0)'
+    action = gets.chomp.to_i
+  end
+
   def winner_msg(user, croupier, winner)
     puts "User points: #{user.card_points}, croupier points: #{croupier.card_points}"
     puts "Winner: #{winner.name} \n" if winner == user || winner == croupier
