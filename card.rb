@@ -34,7 +34,7 @@ class Card
 
   # check number
   def number?
-    !@name.to_i.zero?
+    !@name.chars.first.to_i.zero?
   end
 
   # check picture

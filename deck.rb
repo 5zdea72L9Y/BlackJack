@@ -14,14 +14,14 @@ class Deck
     Card.card_values.each do |value|
       Card.card_suit.each do |suit|
         card = "#{value} - #{suit}"
-        @generated_cards << card
+        card_toggle = Card.new(card)
+        @generated_cards << card_toggle
       end
     end
     @generated_cards.shuffle!
   end
 
   def give_card
-    card = @generated_cards.pop
-    Card.new(card)
+    @generated_cards.pop
   end
 end
