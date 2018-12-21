@@ -22,7 +22,10 @@ class Card
 
   # count points
   def count_points
-    @points = @name.chars.first.to_i if number?
+    if number?
+      points = @name[0] + @name[1]
+      @points = points.to_i
+    end
     @points = 10 if picture?
     @points = 11 if ace?
   end
